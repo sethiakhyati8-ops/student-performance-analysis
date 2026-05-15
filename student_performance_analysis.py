@@ -5,6 +5,8 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Student performance dataset
 df = pd.DataFrame({
@@ -56,3 +58,52 @@ print(f"Under 5 hours average  : {low.round(1)}")
 condition = (df["attendance"] < 75) & (df["average"] < 60)
 c=df[condition]
 print(c[["name","attendance", "average"]])
+
+# =====================
+# CHART 1 - Scatter plot
+# study hours vs average 
+# =====================
+plt.figure(figsize=(7, 5))
+plt.scatter(df["study_hours"], df["average"],
+            color="purple", s=80)          # s = dot ka size
+
+# Har point pe student ka naam likhenge
+for i, row in df.iterrows():
+    plt.annotate(row["name"],
+                 (row["study_hours"], row["average"]),
+                 fontsize=7, ha="left")
+
+plt.title("Study Hours vs Average Score")
+plt.xlabel("Study Hours per Day")
+plt.ylabel("Average Score")
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("scatter.png")
+plt.show()
+
+# =====================
+# CHART 2 - Histogram
+# score distribution
+# =====================
+plt.figure(figsize=(7, 5))
+plt.hist(df["average"], bins=6, color="steelblue", edgecolor="white")
+plt.title("Distribution of Average Scores")
+plt.xlabel("Average Score")
+plt.ylabel("Number of Students")
+plt.tight_layout()
+plt.savefig("histogram.png")
+plt.show()
+
+# =====================
+# CHART 3 - Heatmap (Seaborn)
+# math, english, science and attendance correlation
+# =====================
+plt.figure(figsize=(6, 5))
+corr = df[["math", "english", "science",
+           "study_hours", "attendance"]].corr()
+sns.heatmap(corr, annot=True, fmt=".2f",
+            cmap="coolwarm", linewidths=0.5)
+plt.title("Correlation Heatmap")
+plt.tight_layout()
+plt.savefig("heatmap.png")
+plt.show()
